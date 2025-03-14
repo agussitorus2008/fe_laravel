@@ -9,10 +9,7 @@ use App\Http\Controllers\Controller;
 
 class UnitKerjaController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('role:admin');
-    }
+
 
 
     public function index()
@@ -26,38 +23,38 @@ class UnitKerjaController extends Controller
      */
     public function store(Request $request)
     {
-        // Ambil pengguna yang sedang login
+        
         $user = auth()->user();
 
-        // Memastikan hanya admin yang dapat menambah unit kerja
+
         if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized. Only admins can add unit kerja.'], 403);
         }
 
-        // Validasi inputan dari request
+
         $request->validate([
             'nama_unit_kerja' => 'required|unique:unit_kerja,nama_unit_kerja',  // Pastikan nama unit kerja unik
-            'alamat_unit_kerja' => 'required',  // Pastikan alamat unit kerja ada
+            'alamat_unit_kerja' => 'required',  
         ]);
 
-        // Menyimpan unit kerja baru
+
         $unitKerja = UnitKerja::create([
             'nama_unit_kerja' => $request->nama_unit_kerja,
             'alamat_unit_kerja' => $request->alamat_unit_kerja,
         ]);
 
-        // Mencatat aktivitas dalam tabel log_activity
+
         LogActivity::create([
-            'user_id' => $user->id,  // ID pengguna yang sedang login
+            'user_id' => $user->id,  
             'activity_type' => 'Menambah Bagian Baru dalam Unit Kerja Yaitu ' . $unitKerja->nama_unit_kerja,
         ]);
 
-        // Mengembalikan response dengan unit kerja yang baru dibuat
+
         return response()->json($unitKerja, 201);
     }
 
 
-    // Menampilkan unit kerja berdasarkan ID
+
     public function show($id)
     {
         $unitKerja = UnitKerja::findOrFail($id);
@@ -71,7 +68,7 @@ class UnitKerjaController extends Controller
     {
         $user = auth()->user();
 
-        // Memastikan hanya admin yang dapat menambah unit kerja
+
         if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized. Only admins can add unit kerja.'], 403);
         }
@@ -89,7 +86,7 @@ class UnitKerjaController extends Controller
         ]);
 
         LogActivity::create([
-            'user_id' => auth()->user()->id,  // ID pengguna yang sedang login
+            'user_id' => auth()->user()->id,  
             'activity_type' => 'Memperbarui Unit Kerja Yaitu ' . $unitKerja->nama_unit_kerja,  // Jenis aktivitas yang dilakukan
         ]);
 
@@ -104,8 +101,6 @@ class UnitKerjaController extends Controller
     {
 
         $user = auth()->user();
-
-        // Memastikan hanya admin yang dapat menambah unit kerja
         if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized. Only admins can add unit kerja.'], 403);
         }
@@ -113,13 +108,11 @@ class UnitKerjaController extends Controller
         $unitKerja = UnitKerja::findOrFail($id);
 
         LogActivity::create([
-            'user_id' => $user->id,  // ID pengguna yang sedang login
+            'user_id' => $user->id,  
             'activity_type' => 'Menghapus Unit Kerja Yaitu ' . $unitKerja->nama_unit_kerja,  // Jenis aktivitas yang dilakukan
         ]);
 
         $unitKerja->delete();
-
-        // Mengembalikan response JSON dengan pesan sukses
         return response()->json([
             'message' => 'Unit Kerja berhasil dihapus'
         ], 200);

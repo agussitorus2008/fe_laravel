@@ -19,15 +19,14 @@ use App\Http\Controllers\Api\UnitKerjaController;
 |
 */
 Route::prefix('auth')->group(function () {
-    Route::post('login', [AuthController::class, 'login']);  // Route untuk login
-    Route::post('register', [AuthController::class, 'register']); // Route untuk registrasi
+    Route::post('login', [AuthController::class, 'login']);  
+    Route::post('register', [AuthController::class, 'register']); 
     Route::get('/user', [AuthController::class, 'index']);
-    Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']); // Route untuk logout, hanya dapat diakses jika sudah login
+    Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']); 
 });
 
 Route::middleware('auth:api')->get('/dashboard', [DashboardController::class, 'index']);
 
-// Rute untuk Pegawai dengan middleware autentikasi dan role admin
 Route::prefix('pegawai')->middleware(['auth:api'])->group(function() {
     Route::get('/', [PegawaiController::class, 'index']);         
     Route::post('/', [PegawaiController::class, 'store']);        
@@ -36,7 +35,6 @@ Route::prefix('pegawai')->middleware(['auth:api'])->group(function() {
     Route::delete('{id}', [PegawaiController::class, 'destroy']);
 });
 
-// Rute untuk Unit Kerja dengan middleware autentikasi dan role admin
 Route::prefix('unitkerja')->middleware(['auth:api'])->group(function() {
     Route::get('/', [UnitKerjaController::class, 'index']);       
     Route::post('/', [UnitKerjaController::class, 'store']);      

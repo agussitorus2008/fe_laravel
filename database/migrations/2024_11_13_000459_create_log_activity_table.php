@@ -12,12 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('log_activity', function (Blueprint $table) {
-            $table->id();  // ID unik untuk setiap log
-            $table->unsignedBigInteger('user_id');  // Menyimpan ID user yang beraktivitas
-            $table->string('activity_type');  // Jenis aktivitas (misalnya login, update)
-            $table->timestamps();  // Tanggal dan waktu aktivitas dicatat
-
-            // Menetapkan relasi dengan tabel `users`
+            $table->id(); 
+            $table->unsignedBigInteger('user_id');  
+            $table->string('activity_type');  
+            $table->timestamps();  
             $table->foreign('user_id')
                   ->references('id')
                   ->on('users')
